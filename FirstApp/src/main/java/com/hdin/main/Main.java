@@ -19,11 +19,11 @@ public class Main {
 
         System.out.println("Please enter start date");
         String startDate = sc.nextLine();
-        ValidationHelper.isValidDate(startDate);
+        
 
         System.out.println("Please enter end date");
         String endDate = sc.nextLine();
-        ValidationHelper.isValidDate(startDate);
+
 
         while(true) {
             System.out.println("Press 1 for display all TV Shows");
