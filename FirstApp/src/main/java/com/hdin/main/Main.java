@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] arg) throws Exception {
         NetflixShowUseCase netflixShowUseCase = new NetflixShowUseCase();
-        netflixShowUseCase.parseNetflixData("/path/to/csv");
+        netflixShowUseCase.parseNetflixData("/home/ritamaa/Downloads/netflix_titles.csv");
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Please enter start date");

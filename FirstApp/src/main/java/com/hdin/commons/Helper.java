@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
 
 public class Helper {
 
-    public static NetflixShow prepareNetflixShowObject(String entry) throws Exception{
-        String[] values = entry.split(",");
+    public static NetflixShow prepareNetflixShowObject(String entry) throws Exception {
+        String data = entry.replace(", ", "#");
+        String[] values = data.split(",");
+        List<String> finalValues = Arrays.asList(values).stream().map(d -> d.replace("#", ", ")).collect(Collectors.toList());
         NetflixShow netflixShow = null;
-        if (values.length == 12)
-            netflixShow = new NetflixShow(values[0], values[1], values[2], values[3], values[4], values[5], dateFormater(values[6]), values[7], values[8], values[9], values[10], values[11]);
+        if (finalValues.size() == 12)
+            netflixShow = new NetflixShow(finalValues.get(0), finalValues.get(1), finalValues.get(2), finalValues.get(3), finalValues.get(4), finalValues.get(5), finalValues.get(6), finalValues.get(7), finalValues.get(8), finalValues.get(9), finalValues.get(10), finalValues.get(11));
         return netflixShow;
     }
 
@@ -37,23 +39,25 @@ public class Helper {
         return EntryFilter.DEFAULT;
     }
 
-    public static Date dateFormater(String inputDate) throws ParseException {
-
-        inputDate = inputDate.replaceAll("#", ",");
-        inputDate = inputDate.trim();
-        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        Date date = format.parse(inputDate);
-
-        return date;
+    public static Date dateFormater(String inputDate){
+        try {
+            inputDate = inputDate.trim();
+            inputDate = inputDate.replace("\"","");
+            DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+            Date date = format.parse(inputDate);
+            return date;
+        }catch(ParseException exp){
+            return new Date();
+        }
     }
 
-    public static NetflixShows prepareNetflixShowsObjects(List<NetflixShow> list, String startDate, String endDate) {
+    public static NetflixShows prepareNetflixShowsObjects(List<NetflixShow> list, String startDate, String endDate){
         NetflixShows netflixShows = null;
         try {
             Date strDate = Helper.dateFormater(startDate);
             Date enDate = Helper.dateFormater(endDate);
-            list.sort(Comparator.comparing(data -> data.getDateAdded()));
-            List<NetflixShow> filterdList = list.stream().filter(data -> data.getDateAdded().after(strDate) && data.getDateAdded().before(enDate)).collect(Collectors.toList());
+            list.stream().filter(data->data.getDateAdded()!=null).collect(Collectors.toList()).sort(Comparator.comparing(data -> data.getDateAdded()));
+            List<NetflixShow> filterdList = list.stream().filter(data -> dateFormater(data.getDateAdded()).after(strDate) && dateFormater(data.getDateAdded()).before(enDate)).collect(Collectors.toList());
             netflixShows = new NetflixShows();
             netflixShows.setShowList(filterdList);
         } catch (Exception exp) {
@@ -61,4 +65,7 @@ public class Helper {
         }
         return netflixShows;
     }
+
+
+
 }

@@ -7,7 +7,7 @@ public class NetflixShow {
     String director;
     String cast;
     String country;
-    Date dateAdded;
+    String dateAdded;
     String releaseYear;
     String rating;
     String duration;
@@ -15,7 +15,7 @@ public class NetflixShow {
     String description;
 
 
-    public NetflixShow(String showId, String type, String title, String director, String cast, String country, Date dateAdded, String releaseYear, String rating, String duration, String listedIn, String description) {
+    public NetflixShow(String showId, String type, String title, String director, String cast, String country, String dateAdded, String releaseYear, String rating, String duration, String listedIn, String description) {
         this.showId = showId;
         this.type = type;
         this.title = title;
@@ -79,11 +79,11 @@ public class NetflixShow {
         this.country = country;
     }
 
-    public Date getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(String dateAdded) {
         this.dateAdded = dateAdded;
     }
 
