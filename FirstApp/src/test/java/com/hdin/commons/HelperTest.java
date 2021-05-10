@@ -4,12 +4,13 @@ import com.hdin.model.EntryFilter;
 import com.hdin.model.NetflixShow;
 import com.hdin.model.NetflixShows;
 import org.junit.jupiter.api.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@SpringBootTest
 public class HelperTest {
 
     private static String sampleEntry = "s1,TV Show,3%,,João Miguel, Bianca Comparato, Michel Gomes, Rodolfo Valente, Vaneza Oliveira, Rafael Lozano, Viviane Porto, Mel Fronckowiak, Sergio Mamberti, Zezé Motta, Celso Frateschi,Brazil,August 14, 2017,2017,TV-MA,4 Seasons,International TV Shows, TV Dramas, TV Sci-Fi & Fantasy,In a future where the elite inhabit an island paradise far from the crowded slums, you get one chance to join the 3% saved from squalor.,";
