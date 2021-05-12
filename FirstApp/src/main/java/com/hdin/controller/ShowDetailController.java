@@ -1,7 +1,9 @@
 package com.hdin.controller;
 
+import com.hdin.commons.CommonConstants;
 import com.hdin.commons.ValidationHelper;
 import com.hdin.model.NetflixShows;
+import com.hdin.model.NfApiResponse;
 import com.hdin.model.RequestFilter;
 import com.hdin.model.TvShowsRequest;
 import com.hdin.port.in.NetflixInputPort;
@@ -25,19 +27,22 @@ public class ShowDetailController {
 
     NetflixInputPort netflixInputPort = new NetflixShowUseCase();
 
-   @RequestMapping(value = "/tvshows",method = RequestMethod.GET)
-   public ResponseEntity<NetflixShows> getTvShowsCounts(@RequestParam Map<String, String> params) {
+    @RequestMapping(value = "/tvshows", method = RequestMethod.GET)
+    public ResponseEntity<NfApiResponse> getTvShowsCounts(@RequestParam Map<String, String> params) {
 
         long startTime = System.currentTimeMillis();
         Map.Entry<String, String> param = params.entrySet().iterator().next();
         NetflixShows shows = null;
         TvShowsRequest tvShowsRequest = new TvShowsRequest();
+        NfApiResponse<NetflixShows> response = new NfApiResponse<>();
 
-        if(!ValidationHelper.isAuthPresent(requestDetais)){
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!ValidationHelper.isAuthPresent(requestDetais)) {
+            response.setMessage(CommonConstants.UNAUTHORIZED_USER);
+            response.setResponse(shows);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
-        switch(param.getKey()){
+        switch (param.getKey()) {
             case "count":
                 tvShowsRequest.setCount(Integer.parseInt(param.getValue()));
                 shows = netflixInputPort.getTvShowsDetail(RequestFilter.COUNT, tvShowsRequest);
@@ -65,7 +70,9 @@ public class ShowDetailController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-TIME-TO-EXECUTE", total + " MS");
 
-        return ResponseEntity.accepted().headers(headers).body(shows);
+        response.setMessage(CommonConstants.SHOW_DATA_MSG);
+        response.setResponse(shows);
+        return ResponseEntity.accepted().headers(headers).body(response);
     }
 
 

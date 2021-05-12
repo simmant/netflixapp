@@ -15,16 +15,15 @@ import java.util.Scanner;
 
 public class SyncUtil implements Runnable {
     Logger logger = LoggerFactory.getLogger(SyncUtil.class);
-    String filePath;
+    File file;
 
-    public SyncUtil(String filePath) {
-        this.filePath = filePath;
+    public SyncUtil(File file) {
+        this.file = file;
     }
 
-    private void showSync(String path) throws Exception {
+    private void showSync(File file) throws Exception {
 
-        File file = new File(path);
-        FileInputStream fio = new FileInputStream(path);
+        FileInputStream fio = new FileInputStream(file);
         Scanner scanner = new Scanner(fio);
         RestTemplate restTemplate = new RestTemplate();
         final String baseUrl = "http://localhost:8080/addshow";
@@ -49,7 +48,7 @@ public class SyncUtil implements Runnable {
     @Override
     public void run() {
         try {
-            showSync(filePath);
+            showSync(file);
         } catch (Exception exp) {
             exp.printStackTrace();
         }

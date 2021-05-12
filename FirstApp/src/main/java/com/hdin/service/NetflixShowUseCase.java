@@ -8,22 +8,28 @@ import com.hdin.port.in.NetflixInputPort;
 import com.hdin.port.out.NetflixOutputPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.util.*;
 
+@Service
 public class NetflixShowUseCase implements NetflixInputPort {
-    Logger logger = LoggerFactory.getLogger(NetflixShowUseCase.class);
+    @Autowired
     NetflixOutputPort netflixOutputPort;
+
+    Logger logger = LoggerFactory.getLogger(NetflixShowUseCase.class);
+
     static List<NetflixShow> tvShows = new ArrayList<>();
     static List<NetflixShow> horrorMovies = new ArrayList<>();
     static List<NetflixShow> indianMovies = new ArrayList<>();
 
     @Override
-    public void parseNetflixData(String filePath) throws ApiException {
+    public void parseNetflixData(FileInputStream fio) throws ApiException {
         logger.info("NetflixShowUseCase->parseNetflixData call started.");
         try {
-            FileInputStream fio = new FileInputStream(filePath);
+
             Scanner sc = new Scanner(fio);
             while (sc.hasNext()) {
                 filterData(sc.nextLine());
@@ -67,7 +73,7 @@ public class NetflixShowUseCase implements NetflixInputPort {
     @Override
     public void retriveFilterData(EntryFilter entryFilter, String startDate, String endDate) {
         logger.info("NetflixShowUseCase->retriveFilterData call started.");
-        netflixOutputPort = new NetflixAdapter();
+
 
         switch (entryFilter) {
             case TV_SHOW:
@@ -95,15 +101,15 @@ public class NetflixShowUseCase implements NetflixInputPort {
     }
 
     @Override
-    public NetflixShows getTvShowsDetail(RequestFilter requestFilter, TvShowsRequest resuest) {
+    public NetflixShows getTvShowsDetail(RequestFilter requestFilter, TvShowsRequest request) {
         logger.info("NetflixShowUseCase->getTvShowsDetail call started.");
 
         NetflixShows netflixShows = new NetflixShows();
-        netflixOutputPort = new NetflixAdapter();
+
         switch (requestFilter) {
             case COUNT:
                 logger.debug("NetflixShowUseCase->getTvShowsDetail inside COUNT case.");
-                netflixShows.setShowList(tvShows.subList(0, resuest.getCount()));
+                netflixShows.setShowList(tvShows.subList(0, request.getCount()));
                 break;
             case TYPE:
                 logger.debug("NetflixShowUseCase->getTvShowsDetail inside TYPE case.");
@@ -117,7 +123,7 @@ public class NetflixShowUseCase implements NetflixInputPort {
 
             case DATE_RANGE:
                 logger.debug("NetflixShowUseCase->getTvShowsDetail inside DATE_RANGE case.");
-                netflixShows = netflixOutputPort.tvShows(tvShows, resuest.getStartDate(), resuest.getEndDate());
+                netflixShows = netflixOutputPort.tvShows(tvShows, request.getStartDate(), request.getEndDate());
                 break;
         }
         logger.info("NetflixShowUseCase->getTvShowsDetail call end");
